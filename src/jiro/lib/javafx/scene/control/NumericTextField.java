@@ -13,7 +13,7 @@ import javafx.scene.input.ScrollEvent;
  * <li>上限値を元に入力できる桁数を設定する。</li>
  * </ul>
  * @author jiro
- * @version 1.2
+ * @version 1.3
  */
 public class NumericTextField extends TextField {
   private static final String TEXT = "0";
@@ -35,6 +35,11 @@ public class NumericTextField extends TextField {
    * 値が存在しなかった場合の初期値
    */
   private final int defaultValue;
+
+  /**
+   * マウススクロールでの数値の変動量
+   */
+  private int variationValue = 1;
 
   /**
    * デフォルト設定を利用するコンストラクタ。
@@ -111,7 +116,7 @@ public class NumericTextField extends TextField {
   public final void changeValueWithScroll(ScrollEvent e) {
     setDefaultValueIfEmpty();
     int value = Integer.valueOf(getText());
-    int number = 0 < e.getDeltaY() ? ++value : --value;
+    int number = 0 < e.getDeltaY() ? value+variationValue : value-variationValue;
     number = Math.min(number, max);
     number = Math.max(min, number);
     setText("" + number);
@@ -127,6 +132,14 @@ public class NumericTextField extends TextField {
   }
 
   /**
+   * マウススクロールでの数値の変動量をセットする。
+   * @param variationValue 変動量
+   */
+  public void setVariationValue(int variationValue) {
+    this.variationValue = variationValue;
+  }
+
+  /**
    * 保持するテキストが""かnullだった場合に、初期値をセットする。
    */
   private void setDefaultValueIfEmpty() {
@@ -134,5 +147,4 @@ public class NumericTextField extends TextField {
       setText("" + defaultValue);
     }
   }
-
 }
