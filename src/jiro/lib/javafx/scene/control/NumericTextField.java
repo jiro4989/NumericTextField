@@ -8,7 +8,8 @@ import javafx.scene.input.ScrollEvent;
  * <p>
  * 拡張した機能:<br>
  * <ul>
- * <li>マウスホイールで入力されている数値をインクリメント・デクリメントできる。</li>
+ * <li>マウスホイールで入力されている数値をインクリメント・デクリメントできる。<br>
+ * この時、Ctrlを押しながらで少し、Shiftを押しながらで大きく変動させられる。</li>
  * <li>入力できる数値に下限・上限を設定できる。</li>
  * <li>上限値を元に入力できる桁数を設定する。</li>
  * </ul>
@@ -39,7 +40,12 @@ public class NumericTextField extends TextField {
   /**
    * マウススクロールでの数値の変動量
    */
-  private int variationValue = 1;
+  private int variationValue = 5;
+
+  /**
+   * マウススクロールでの数値の大きい変動量
+   */
+  private int largeVariationValue = 10;
 
   /**
    * デフォルト設定を利用するコンストラクタ。
@@ -116,7 +122,12 @@ public class NumericTextField extends TextField {
   public final void changeValueWithScroll(ScrollEvent e) {
     setDefaultValueIfEmpty();
     int value = Integer.valueOf(getText());
-    int number = 0 < e.getDeltaY() ? value+variationValue : value-variationValue;
+    int number = 0 < e.getDeltaX()
+        ? e.isControlDown() ? value+variationValue : value+1
+        : e.isControlDown() ? value-variationValue : value-1;
+    number = 0 < e.getDeltaX()
+        ? e.isShiftDown() ? value+largeVariationValue : value+1
+        : e.isShiftDown() ? value-largeVariationValue : value-1;
     number = Math.min(number, max);
     number = Math.max(min, number);
     setText("" + number);
@@ -137,6 +148,14 @@ public class NumericTextField extends TextField {
    */
   public void setVariationValue(int variationValue) {
     this.variationValue = variationValue;
+  }
+
+  /**
+   * マウススクロールでの数値の大きい変動量をセットする。
+   * @param largeVariationValue 変動量
+   */
+  public void setLargeVariationValue(int largeVariationValue) {
+    this.largeVariationValue = largeVariationValue;
   }
 
   /**
