@@ -104,7 +104,7 @@ public class NumericTextField extends TextField {
     // 入力可能文字数上限を設定する
     lengthProperty().addListener((observable, oldValue, newValue) -> {
       if (oldValue.intValue() < newValue.intValue()) {
-        int digit = String.valueOf(max).length();
+        int digit = String.valueOf(min).length();
         if (digit <= getText().length()) {
           setText(getText().substring(0, digit));
         }
@@ -122,12 +122,12 @@ public class NumericTextField extends TextField {
   public final void changeValueWithScroll(ScrollEvent e) {
     setDefaultValueIfEmpty();
     int value = Integer.valueOf(getText());
-    int number = 0 < e.getDeltaX()
-        ? e.isControlDown() ? value+variationValue : value+1
-        : e.isControlDown() ? value-variationValue : value-1;
-    number = 0 < e.getDeltaX()
-        ? e.isShiftDown() ? value+largeVariationValue : value+1
-        : e.isShiftDown() ? value-largeVariationValue : value-1;
+    int number =
+        e.isControlDown() ?
+            0 < e.getDeltaY() ? value+variationValue : value-variationValue
+        : e.isShiftDown() ?
+            0 < e.getDeltaX() ? value+largeVariationValue : value-largeVariationValue
+        : 0 < e.getDeltaY() ? value+1 : value-1;
     number = Math.min(number, max);
     number = Math.max(min, number);
     setText("" + number);
