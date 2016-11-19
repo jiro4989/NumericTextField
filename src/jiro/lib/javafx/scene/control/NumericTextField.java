@@ -104,7 +104,9 @@ public class NumericTextField extends TextField {
     // 入力可能文字数上限を設定する
     lengthProperty().addListener((observable, oldValue, newValue) -> {
       if (oldValue.intValue() < newValue.intValue()) {
-        int digit = String.valueOf(min).length();
+        int minLength = String.valueOf(min).length();
+        int maxLength = String.valueOf(max).length();
+        int digit = Math.max(minLength, maxLength);
         if (digit <= getText().length()) {
           setText(getText().substring(0, digit));
         }
@@ -140,6 +142,22 @@ public class NumericTextField extends TextField {
   public int getNumber() {
     setDefaultValueIfEmpty();
     return Integer.valueOf(getText());
+  }
+
+  /**
+   * 最小値を返す。
+   * @return 最小値
+   */
+  public int getMin() {
+    return min;
+  }
+
+  /**
+   * 最大値を返す。
+   * @return 最大値
+   */
+  public int getMax() {
+    return max;
   }
 
   /**
