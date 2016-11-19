@@ -123,7 +123,7 @@ public class NumericTextField extends TextField {
    */
   public final void changeValueWithScroll(ScrollEvent e) {
     setDefaultValueIfEmpty();
-    int value = Integer.valueOf(getText());
+    int value = Integer.parseInt(getText());
     int number =
         e.isControlDown() ?
             0 < e.getDeltaY() ? value+variationValue : value-variationValue
