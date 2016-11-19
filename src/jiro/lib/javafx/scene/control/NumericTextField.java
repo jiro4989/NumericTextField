@@ -141,7 +141,7 @@ public class NumericTextField extends TextField {
    */
   public int getNumber() {
     setDefaultValueIfEmpty();
-    return Integer.valueOf(getText());
+    return Integer.parseInt(getText());
   }
 
   /**
